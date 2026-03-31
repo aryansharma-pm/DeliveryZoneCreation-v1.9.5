@@ -1,11 +1,24 @@
 node_modules/
 dist/
+build/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Electron build artifacts
 *.dmg
 *.exe
 *.zip
 *.blockmap
+
+# Environment / secrets
 .env
 .env.*
+
+# Logs & OS
 *.log
 .DS_Store
 Thumbs.db
