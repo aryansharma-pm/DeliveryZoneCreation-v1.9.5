@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — Delivery Zone Manager</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 16px;
+        /* Override grid texture with a cleaner gradient for the login page */
+        background-image:
+          radial-gradient(ellipse at 20% 30%, rgba(13,122,114,0.12) 0%, transparent 55%),
+          radial-gradient(ellipse at 80% 80%, rgba(22,50,100,0.12) 0%, transparent 55%),
+          linear-gradient(155deg, #e8f0f8, #eef4f0);
+        background-attachment: fixed;
+      }
+
+      .login-page {
+        width: 100%;
+        max-width: 440px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .login-brand {
+        text-align: center;
+        padding: 0 8px;
+      }
+
+      .login-brand .eyebrow {
+        justify-content: center;
+        display: block;
+      }
+
+      .login-brand h1 {
+        font-size: clamp(1.45rem, 3vw, 1.85rem);
+        margin-bottom: 6px;
+        color: #0d1f35;
+      }
+
+      .login-brand .lead {
+        font-size: 0.88rem;
+        margin: 6px auto 0;
+        max-width: 36ch;
+      }
+
+      .login-card {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        padding: 28px 28px 24px;
+        animation: rise 0.4s ease both;
+        border-top: 3px solid var(--teal-600);
+      }
+
+      .login-card-title {
+        font-size: 1rem;
+        margin-bottom: 4px;
+        font-family: "Sora", "Inter", sans-serif;
+      }
+
+      .login-card-sub {
+        font-size: 0.83rem;
+        margin-bottom: 20px;
+        color: var(--muted);
+      }
+
+      .step { display: grid; gap: 14px; }
+      .step[hidden] { display: none; }
+
+      .field { display: grid; gap: 6px; }
+
+      .field input {
+        width: 100%;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        font-size: 0.95rem;
+        background: var(--surface-2);
+        color: var(--text);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s;
+        font-family: inherit;
+      }
+
+      .field input:focus {
+        outline: none;
+        border-color: var(--teal-600);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(13, 122, 114, 0.14);
+      }
+
+      .field input:disabled {
+        background: var(--surface-2);
+        color: var(--muted);
+      }
+
+      #otpInput {
+        font-size: 1.65rem;
+        letter-spacing: 0.32em;
+        text-align: center;
+        font-family: "Sora", monospace;
+        font-weight: 700;
+        padding: 14px;
+      }
+
+      .error-box {
+        background: #fff3f2;
+        border: 1px solid var(--env-prod-border);
+        border-radius: var(--radius-sm);
+        padding: 10px 13px;
+        font-size: 0.83rem;
+        color: var(--danger);
+        line-height: 1.45;
+      }
+
+      .error-box[hidden] { display: none; }
+
+      .btn-primary {
+        width: 100%;
+        padding: 13px;
+        font-size: 0.94rem;
+        border-radius: var(--radius);
+      }
+
+      .resend-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.82rem;
+      }
+
+      .back-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.83rem;
+      }
+
+      .success-box {
+        display: grid;
+        gap: 12px;
+        text-align: center;
+        padding: 8px 0;
+      }
+
+      .success-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        color: var(--success);
+        font-size: 1.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-weight: 700;
+        box-shadow: 0 4px 16px rgba(22, 122, 67, 0.2);
+      }
+
+      .success-title {
+        font-family: "Sora", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .success-sub {
+        font-size: 0.86rem;
+        color: var(--muted);
+        margin: 0;
+      }
+
+      .env-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      .env-row .env-label { font-size: 0.78rem; }
+
+      .login-footer {
+        text-align: center;
+        font-size: 0.74rem;
+        color: var(--muted-light);
+        padding: 4px 0;
+        letter-spacing: 0.03em;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="login-platform-logo" href="#" tabindex="-1">
+      <img src="https://cdn.pixelbin.io/v2/jmd-asp/jmd-np/wrkr/jiox0/platform/pictures/free-logo/resize-w:270,/hxFBTZzbc-platform-logo.png" alt="Fynd Platform" />
+    </a>
+    <div class="login-page">
+
+      <div class="login-brand">
+        <p class="eyebrow">Operations Console</p>
+        <h1>Delivery Zone Manager</h1>
+        <p class="muted lead">Sign in to manage delivery zones across your platform environments.</p>
+      </div>
+
+      <div class="login-card">
+        <div class="env-row">
+          <span class="env-label env-label-text muted">Environment</span>
+          <div class="env-tabs" id="envTabs" role="group" aria-label="Select environment">
+            <button type="button" class="env-tab env-tab-sit active" data-env="sit">SIT</button>
+            <button type="button" class="env-tab env-tab-uat" data-env="uat">UAT</button>
+            <button type="button" class="env-tab env-tab-prod" data-env="prod">PROD</button>
+          </div>
+        </div>
+
+        <!-- Step 1 — Email -->
+        <div id="step1" class="step">
+          <div>
+            <h2 class="login-card-title">Welcome back</h2>
+            <p class="muted login-card-sub">Enter your platform email to receive an OTP.</p>
+          </div>
+          <div class="field">
+            <label for="emailInput">Email Address</label>
+            <input
+              id="emailInput"
+              type="email"
+              placeholder="you@gofynd.com"
+              autocomplete="email"
+              autofocus
+              list="emailSuggestions"
+            />
+            <datalist id="emailSuggestions"></datalist>
+          </div>
+          <label class="checkbox-row" style="font-size:0.84rem;margin-top:-4px;">
+            <input id="rememberEmailChk" type="checkbox" />
+            Remember my email on this device
+          </label>
+          <div id="step1Error" class="error-box" hidden></div>
+          <button id="sendOtpBtn" class="btn-primary" type="button">Send OTP</button>
+        </div>
+
+        <!-- Step 2 — OTP -->
+        <div id="step2" class="step" hidden>
+          <div>
+            <h2 class="login-card-title">Check your email</h2>
+            <p class="muted login-card-sub">
+              OTP sent to <strong id="emailDisplay"></strong>.
+            </p>
+          </div>
+          <div class="field">
+            <label for="otpInput">One-Time Password</label>
+            <input
+              id="otpInput"
+              type="text"
+              inputmode="numeric"
+              maxlength="6"
+              placeholder="000000"
+              autocomplete="one-time-code"
+            />
+          </div>
+          <div id="step2Error" class="error-box" hidden></div>
+          <div class="resend-row">
+            <span id="resendTimerText" class="muted"></span>
+            <button id="resendOtpBtn" type="button" class="link-btn" disabled>Resend OTP</button>
+          </div>
+          <button id="verifyOtpBtn" class="btn-primary" type="button">Verify & Login</button>
+          <div class="back-row">
+            <button id="backToEmailBtn" type="button" class="link-btn">&#8592; Change email</button>
+          </div>
+        </div>
+
+        <!-- Step 3 — Success -->
+        <div id="step3" class="step" hidden>
+          <div class="success-box">
+            <div class="success-icon">&#10003;</div>
+            <p class="success-title">Login Successful</p>
+            <p class="success-sub">Redirecting you to the app…</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="login-footer" id="loginFooterVersion">v1.9.6</p>
+    </div>
+
+    <script src="/login.js"></script>
+  </body>
+</html>

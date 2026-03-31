@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="#0f766e"/>
+
+  <!-- Delivery pin / location icon -->
+  <ellipse cx="256" cy="340" rx="60" ry="18" fill="rgba(0,0,0,0.18)"/>
+  <path d="M256 120 C196 120 148 168 148 228 C148 300 256 360 256 360 C256 360 364 300 364 228 C364 168 316 120 256 120Z" fill="#ffffff"/>
+  <circle cx="256" cy="224" r="46" fill="#0f766e"/>
+
+  <!-- Zone grid lines inside pin -->
+  <line x1="210" y1="224" x2="302" y2="224" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+  <line x1="256" y1="178" x2="256" y2="270" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Small dots representing region coverage -->
+  <circle cx="148" cy="380" r="14" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="196" cy="400" r="10" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="316" cy="400" r="10" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="364" cy="380" r="14" fill="rgba(255,255,255,0.5)"/>
+</svg>

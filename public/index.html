@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delivery Zone Manager</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app">
+
+      <section class="card hero">
+        <div>
+          <img src="/logo_black.svg" alt="Fynd" class="hero-brand-logo" />
+          <p class="eyebrow">Operations Console</p>
+          <h1>Delivery Zone Control Center</h1>
+          <p class="muted lead">
+            Manage platform delivery zones with file-driven create/update workflows and structured audit logs.
+          </p>
+        </div>
+        <div class="hero-meta">
+          <span id="appVersionPill" class="pill">v1.9.6</span>
+          <span id="envTypePill" class="pill pill-type" hidden></span>
+          <span id="envBadge" class="pill pill-env pill-sit">SIT</span>
+          <div class="account-pill">
+            <span id="accountEmail" class="account-email muted">Not logged in</span>
+            <a href="/login" id="logoutBtn" class="account-logout link-btn">Logout</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="status-grid">
+        <article class="card status-item">
+          <p class="status-label">Environment</p>
+          <p id="envStatusValue" class="status-value">SIT</p>
+        </article>
+        <article class="card status-item">
+          <p class="status-label">Last Action</p>
+          <p id="lastActionValue" class="status-value">Idle</p>
+        </article>
+        <article class="card status-item">
+          <p class="status-label">Session</p>
+          <p id="sessionStatusValue" class="status-value">—</p>
+        </article>
+        <article class="card status-item">
+          <p class="status-label">Zones Loaded</p>
+          <p id="zonesCountValue" class="status-value">0</p>
+        </article>
+        <article class="card status-item">
+          <p class="status-label">Planned Updates</p>
+          <p id="updatesCountValue" class="status-value">0</p>
+        </article>
+      </section>
+
+      <section class="card form-card">
+        <div class="env-selector-row">
+          <span class="env-label">Environment</span>
+          <div class="env-tabs" id="appEnvTabs" role="group" aria-label="Select environment">
+            <button type="button" class="env-tab env-tab-sit active" data-env="sit">SIT</button>
+            <button type="button" class="env-tab env-tab-uat" data-env="uat">UAT</button>
+            <button type="button" class="env-tab env-tab-prod" data-env="prod">PROD</button>
+          </div>
+          <span id="envApiHint" class="env-api-hint muted"></span>
+        </div>
+
+        <div class="file-row">
+          <div class="file-field">
+            <label for="fileInput">CSV / XLS / XLSX File</label>
+            <input id="fileInput" type="file" accept=".csv,.xls,.xlsx" />
+          </div>
+          <label class="checkbox-row include-details-check">
+            <input id="includeDetails" type="checkbox" checked />
+            Include full zone details while fetching (slower but complete)
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="fetchBtn">Fetch Zones</button>
+          <button id="createBtn">Create From File</button>
+          <button id="planBtn">Plan Updates</button>
+          <button id="applyBtn" class="danger">Apply Updates</button>
+        </div>
+      </section>
+
+      <section class="metrics-grid">
+        <section class="card summary-card">
+          <h2>Summary</h2>
+          <div id="summary" class="summary muted">No action run yet.</div>
+        </section>
+
+        <section class="card logs-card">
+          <div class="logs-head">
+            <h2>Logs</h2>
+            <div class="logs-actions">
+              <button id="copyLogsBtn" type="button" class="secondary">Copy Logs</button>
+              <button id="clearLogsBtn" type="button" class="secondary">Clear Logs</button>
+            </div>
+          </div>
+          <pre id="logs" class="logs">Ready.</pre>
+        </section>
+      </section>
+
+<section class="card">
+        <div class="table-head">
+          <div class="table-title">
+            <h2>Zones</h2>
+            <p id="zoneResultsMeta" class="table-meta">Showing 0 of 0 zones</p>
+          </div>
+          <div class="table-tools">
+            <input id="zoneSearchInput" type="search" placeholder="Search by name, slug, zone ID..." />
+            <select id="zoneSortSelect">
+              <option value="name_asc">Sort: Name A-Z</option>
+              <option value="name_desc">Sort: Name Z-A</option>
+              <option value="stores_desc">Sort: Stores High-Low</option>
+              <option value="regions_desc">Sort: Regions High-Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="zonesTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Zone ID</th>
+                <th>Type</th>
+                <th>Stores</th>
+                <th>Regions</th>
+                <th>Countries</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="table-head">
+          <div class="table-title">
+            <h2>Planned Updates</h2>
+            <p id="updatesResultsMeta" class="table-meta">Showing 0 of 0 planned updates</p>
+          </div>
+          <div class="table-tools">
+            <input id="updatesSearchInput" type="search" placeholder="Search by slug, zone ID, store ID..." />
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="updatesTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Slug</th>
+                <th>Zone ID</th>
+                <th>Store IDs</th>
+                <th>Old Regions</th>
+                <th>New Regions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" class="modal-backdrop" hidden>
+      <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <h3 id="confirmTitle" class="modal-title">Confirm Action</h3>
+        <p id="confirmMessage" class="modal-message"></p>
+        <div class="modal-actions">
+          <button id="confirmCancelBtn" type="button" class="secondary">Cancel</button>
+          <button id="confirmOkBtn" type="button" class="danger">Proceed</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Update banner (shown only in Electron) -->
+    <div id="updateBanner" class="update-banner" hidden>
+      <span id="updateBannerText"></span>
+      <div class="update-banner-actions">
+        <button id="updateInstallBtn" type="button" class="update-install-btn" hidden>Restart &amp; Install</button>
+        <button id="updateDismissBtn" type="button" class="update-dismiss-btn">&#x2715;</button>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+    <script src="/updater.js"></script>
+  </body>
+</html>
